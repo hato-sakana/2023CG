@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>sample2</title>
+
+  <!-- three.jsを読み込む(ローカル) -->
+  <!-- <script src="./three.js"></script> -->
+  <!-- three.jsを読み込む(CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js"></script>
+
+</head>
+<body>
+  <script>
+    // シーンを作成
+    const scene = new THREE.Scene();
+
+    // カメラを作成
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    // レンダラを作成
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // リサイズイベントの定義
+    window.addEventListener('resize', function() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+    });
+
+    // 平行光源1を作成
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight1.position.set(1, 1, 1);
+    scene.add(directionalLight1);
+
+    // 平行光源2を作成
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight2.position.set(-1, -1, -1);
+    scene.add(directionalLight2);
+
+    // 円錐を作成
+    const geometry = new THREE.ConeGeometry(1, 2, 32); // 半径1, 高さ2, 側面のセグメント数32の円錐
+    const material = new THREE.MeshPhongMaterial({ color: 0xFF0000 });
+    const cone = new THREE.Mesh(geometry, material);
+    scene.add(cone);
+
+    // アニメーションの定義
+    function animate() {
+        requestAnimationFrame(animate);
+
+        // 円錐を回転
+        cone.rotation.x += 0.01;
+        cone.rotation.y += 0.01;
+
+        renderer.render(scene, camera);
+    }
+
+    animate();
+</script>
+
+</body>
+</html>

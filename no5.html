@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>sample4</title>
+
+  <!-- three.jsを読み込む(ローカル) -->
+  <!-- <script src="./three.js"></script> -->
+  <!-- three.jsを読み込む(CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js"></script>
+
+</head>
+<body>
+  <script>
+    // シーンを作成
+    const scene = new THREE.Scene();
+
+    // カメラを作成
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    // レンダラを作成
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // リサイズイベントの定義
+    window.addEventListener('resize', function() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+    });
+
+    // 平行光源1を作成
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight1.position.set(1, 1, 1);
+    scene.add(directionalLight1);
+
+    // 平行光源2を作成
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight2.position.set(-1, -1, -1);
+    scene.add(directionalLight2);
+
+    // 球体を作成 (ワイヤーフレーム)
+    const geometry1 = new THREE.SphereGeometry(1, 32, 32);
+    const material1 = new THREE.MeshBasicMaterial({ color: 0xFF0000, wireframe: true });
+    const sphereWireframe = new THREE.Mesh(geometry1, material1);
+    sphereWireframe.position.x -= 2; // 球体を左に移動
+    scene.add(sphereWireframe);
+
+    // 球体を作成 (サーフェスモデル)
+    const geometry2 = new THREE.SphereGeometry(1, 32, 32);
+    const material2 = new THREE.MeshPhongMaterial({ color: 0xFF0000 });
+    const sphereSurface = new THREE.Mesh(geometry2, material2);
+    sphereSurface.position.x += 2; // 球体を右に移動
+    scene.add(sphereSurface);
+
+    // アニメーションの定義
+    function animate() {
+        requestAnimationFrame(animate);
+
+        // 球体を回転
+        sphereWireframe.rotation.x += 0.01;
+        sphereWireframe.rotation.y += 0.01;
+        sphereSurface.rotation.x += 0.01;
+        sphereSurface.rotation.y += 0.01;
+
+        renderer.render(scene, camera);
+    }
+
+    animate();
+</script>
+
+</body>
+</html>

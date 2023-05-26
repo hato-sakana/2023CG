@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>sample5</title>
+
+  <!-- three.jsを読み込む(ローカル) -->
+  <!-- <script src="./three.js"></script> -->
+  <!-- three.jsを読み込む(CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js"></script>
+
+</head>
+<body>
+  <script>
+    // シーンを作成
+    const scene = new THREE.Scene();
+
+    // カメラを作成
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    // レンダラを作成
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // リサイズイベントの定義
+    window.addEventListener('resize', function() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+    });
+
+    // 平行光源1を作成
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight1.position.set(1, 1, 1);
+    scene.add(directionalLight1);
+
+    // 平行光源2を作成
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight2.position.set(-1, -1, -1);
+    scene.add(directionalLight2);
+
+    // 円錐を作成 (ワイヤーフレーム)
+    const geometry1 = new THREE.ConeGeometry(1, 2, 32);
+    const material1 = new THREE.MeshBasicMaterial({ color: 0xFF0000, wireframe: true });
+    const coneWireframe = new THREE.Mesh(geometry1, material1);
+    coneWireframe.position.x -= 2; // 円錐を左に移動
+    scene.add(coneWireframe);
+
+    // 円錐を作成 (サーフェスモデル)
+    const geometry2 = new THREE.ConeGeometry(1, 2, 32);
+    const material2 = new THREE.MeshPhongMaterial({ color: 0xFF0000 });
+    const coneSurface = new THREE.Mesh(geometry2, material2);
+    coneSurface.position.x += 2; // 円錐を右に移動
+    scene.add(coneSurface);
+
+    // アニメーションの定義
+    function animate() {
+        requestAnimationFrame(animate);
+
+        // 円錐を回転
+        coneWireframe.rotation.x += 0.01;
+        coneWireframe.rotation.y += 0.01;
+        coneSurface.rotation.x += 0.01;
+        coneSurface.rotation.y += 0.01;
+
+        renderer.render(scene, camera);
+    }
+
+    animate();
+</script>
+
+</script>
+</body>
+</html>
